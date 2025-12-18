@@ -405,15 +405,6 @@
         // Обновление таймера каждую секунду
         updateTimer();
         setInterval(updateTimer, 1000);
-        
-        // Добавляем обработчики клика на блоки
-        document.querySelectorAll('.version-block').forEach(block => {
-            block.addEventListener('click', function(e) {
-                e.preventDefault();
-                const versionName = this.querySelector('.version-name').textContent;
-                alert(`Вы выбрали: ${versionName}. Эта ссылка ведет на страницу с подробным описанием данной версии.`);
-            });
-        });
     </script>
 </body>
 </html>
