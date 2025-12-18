@@ -1,1 +1,578 @@
-<a href="./index.html" style="font-size: 16px; font-weight: 600; color: white; position: absolute; left: 20px; top: 20px; display: inline-block;">Назад</a>
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Новогодний отсчёт</title>
+    <style>
+      :root {
+        --bg1: #06162c;
+        --bg2: #0a2a55;
+        --ice: rgba(255, 255, 255, 0.14);
+        --ice-strong: rgba(255, 255, 255, 0.22);
+        --glow: rgba(160, 255, 255, 0.55);
+        --gold: #ffd37a;
+        --mint: #aef5ff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.92);
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+          Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        overflow: hidden;
+        background: radial-gradient(1200px 700px at 20% 10%, #133a72 0%, transparent 65%),
+          radial-gradient(900px 600px at 80% 25%, #0b5a8d 0%, transparent 60%),
+          linear-gradient(180deg, var(--bg1), var(--bg2));
+      }
+
+      /* Subtle moving aurora */
+      .aurora {
+        position: fixed;
+        inset: -20%;
+        background:
+          radial-gradient(closest-side at 30% 35%, rgba(120, 255, 228, 0.18), transparent 55%),
+          radial-gradient(closest-side at 70% 40%, rgba(140, 180, 255, 0.18), transparent 55%),
+          radial-gradient(closest-side at 45% 70%, rgba(255, 170, 220, 0.12), transparent 60%);
+        filter: blur(18px) saturate(120%);
+        opacity: 0.9;
+        animation: auroraDrift 16s ease-in-out infinite alternate;
+        pointer-events: none;
+        transform: translate3d(0, 0, 0);
+      }
+
+      @keyframes auroraDrift {
+        0% {
+          transform: translate3d(-2%, -1%, 0) rotate(-1deg);
+        }
+        100% {
+          transform: translate3d(2%, 1.5%, 0) rotate(1deg);
+        }
+      }
+
+      /* Twinkling stars */
+      .stars,
+      .stars::before,
+      .stars::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-repeat: repeat;
+        background-size: 260px 260px;
+        background-image: radial-gradient(circle at 15px 30px, rgba(255, 255, 255, 0.85) 0 1px, transparent 2px),
+          radial-gradient(circle at 120px 90px, rgba(255, 255, 255, 0.7) 0 1px, transparent 2px),
+          radial-gradient(circle at 200px 40px, rgba(255, 255, 255, 0.6) 0 1px, transparent 2px),
+          radial-gradient(circle at 40px 180px, rgba(255, 255, 255, 0.75) 0 1px, transparent 2px),
+          radial-gradient(circle at 210px 210px, rgba(255, 255, 255, 0.55) 0 1px, transparent 2px);
+        opacity: 0.35;
+        pointer-events: none;
+      }
+
+      .stars::before {
+        opacity: 0.22;
+        filter: blur(0.4px);
+        transform: translate3d(0, 0, 0) scale(1.25);
+        animation: starTwinkle 6s ease-in-out infinite;
+      }
+
+      .stars::after {
+        opacity: 0.16;
+        filter: blur(0.6px);
+        transform: translate3d(0, 0, 0) scale(1.6);
+        animation: starTwinkle 8s ease-in-out infinite reverse;
+      }
+
+      @keyframes starTwinkle {
+        0% {
+          opacity: 0.12;
+        }
+        50% {
+          opacity: 0.36;
+        }
+        100% {
+          opacity: 0.18;
+        }
+      }
+
+      /* Snowfall */
+      .snow {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      .flake {
+        position: absolute;
+        top: -10vh;
+        width: var(--s);
+        height: var(--s);
+        left: var(--x);
+        opacity: var(--o);
+        border-radius: 50%;
+        background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.22));
+        filter: blur(0.2px);
+        animation: fall var(--d) linear infinite;
+        transform: translate3d(0, 0, 0);
+      }
+
+      .flake::after {
+        content: "";
+        position: absolute;
+        inset: -35%;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(174, 245, 255, 0.22), transparent 60%);
+        opacity: 0.8;
+      }
+
+      @keyframes fall {
+        0% {
+          transform: translate3d(0, -10vh, 0) translateX(0);
+        }
+        100% {
+          transform: translate3d(var(--drift), 112vh, 0) translateX(0);
+        }
+      }
+
+      /* Layout */
+      .wrap {
+        position: relative;
+        height: 100%;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+
+      .card {
+        width: min(980px, 94vw);
+        border-radius: 28px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.08));
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45),
+          0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        overflow: hidden;
+        position: relative;
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(600px 240px at 20% 20%, rgba(174, 245, 255, 0.18), transparent 60%),
+          radial-gradient(520px 240px at 85% 35%, rgba(255, 211, 122, 0.14), transparent 65%);
+        pointer-events: none;
+      }
+
+      .inner {
+        position: relative;
+        padding: clamp(22px, 4.5vw, 44px);
+        display: grid;
+        gap: 18px;
+        align-items: center;
+        justify-items: center;
+        text-align: center;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(20px, 3.2vw, 36px);
+        letter-spacing: 0.3px;
+        line-height: 1.15;
+        text-shadow: 0 0 22px rgba(160, 255, 255, 0.25);
+      }
+
+      .subtitle {
+        margin: 0;
+        opacity: 0.82;
+        max-width: 66ch;
+        line-height: 1.5;
+      }
+
+      .timer {
+        display: grid;
+        grid-auto-flow: column;
+        gap: clamp(10px, 2vw, 16px);
+        margin-top: 8px;
+        align-items: stretch;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .tbox {
+        min-width: clamp(74px, 11vw, 116px);
+        border-radius: 18px;
+        padding: 14px 14px 12px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.07));
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.22);
+      }
+
+      .num {
+        font-variant-numeric: tabular-nums;
+        font-size: clamp(26px, 4.2vw, 44px);
+        font-weight: 800;
+        letter-spacing: 0.6px;
+        color: rgba(255, 255, 255, 0.95);
+        text-shadow: 0 0 18px rgba(174, 245, 255, 0.25);
+      }
+
+      .lab {
+        margin-top: 6px;
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        opacity: 0.74;
+      }
+
+      .glowline {
+        width: min(760px, 92%);
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(174, 245, 255, 0.65), transparent);
+        box-shadow: 0 0 24px rgba(174, 245, 255, 0.35);
+        margin: 6px 0 2px;
+      }
+
+      .hint {
+        font-size: 13px;
+        opacity: 0.72;
+      }
+
+      /* Flying beer bottle */
+      .bottle {
+        position: fixed;
+        top: 14vh;
+        left: -20vmin;
+        width: clamp(84px, 10vw, 130px);
+        height: auto;
+        z-index: 5;
+        pointer-events: none;
+        filter: drop-shadow(0 18px 18px rgba(0, 0, 0, 0.35))
+          drop-shadow(0 0 18px rgba(255, 211, 122, 0.18));
+        transform-origin: 50% 80%;
+        animation:
+          flyAcross 9.5s ease-in-out infinite alternate,
+          bob 2.6s ease-in-out infinite;
+      }
+
+      @keyframes flyAcross {
+        0% {
+          transform: translate3d(-10vw, 0, 0) rotate(-8deg);
+        }
+        100% {
+          transform: translate3d(120vw, 0, 0) rotate(10deg);
+        }
+      }
+
+      @keyframes bob {
+        0% {
+          translate: 0 0;
+        }
+        50% {
+          translate: 0 16px;
+        }
+        100% {
+          translate: 0 0;
+        }
+      }
+
+      .bottle .shine {
+        animation: shine 2.2s ease-in-out infinite;
+        transform-origin: center;
+      }
+
+      @keyframes shine {
+        0%,
+        100% {
+          opacity: 0.55;
+          transform: translateX(-2px);
+        }
+        50% {
+          opacity: 0.9;
+          transform: translateX(3px);
+        }
+      }
+
+      .bottle .foam {
+        transform-origin: 50% 80%;
+        animation: foam 1.9s ease-in-out infinite;
+      }
+
+      @keyframes foam {
+        0%,
+        100% {
+          transform: scale(1) translateY(0);
+        }
+        50% {
+          transform: scale(1.03) translateY(-1px);
+        }
+      }
+
+      /* Responsive timer wrapping */
+      @media (max-width: 520px) {
+        .timer {
+          grid-auto-flow: row;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .tbox {
+          min-width: 0;
+        }
+      }
+
+      /* Accessibility: reduce motion */
+      @media (prefers-reduced-motion: reduce) {
+        .aurora,
+        .stars::before,
+        .stars::after,
+        .flake,
+        .bottle,
+        .bottle .shine,
+        .bottle .foam {
+          animation: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a href="./index.html" style="font-size: 16px; font-weight: 600; color: white; position: absolute; left: 20px; top: 20px; display: inline-block;">Назад</a>
+    <div class="aurora" aria-hidden="true"></div>
+    <div class="stars" aria-hidden="true"></div>
+
+    <div class="snow" id="snow" aria-hidden="true"></div>
+
+    <!-- Inline SVG beer bottle -->
+    <svg
+      class="bottle"
+      viewBox="0 0 160 320"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient id="glass" x1="55" y1="40" x2="110" y2="300" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#2e6c2f" stop-opacity="0.95" />
+          <stop offset="0.45" stop-color="#1f4f24" stop-opacity="0.95" />
+          <stop offset="1" stop-color="#153b1b" stop-opacity="0.95" />
+        </linearGradient>
+        <linearGradient id="glassEdge" x1="48" y1="40" x2="120" y2="280" gradientUnits="userSpaceOnUse">
+          <stop stop-color="rgba(255,255,255,0.35)" />
+          <stop offset="0.25" stop-color="rgba(255,255,255,0.10)" />
+          <stop offset="0.7" stop-color="rgba(255,255,255,0.00)" />
+          <stop offset="1" stop-color="rgba(255,255,255,0.14)" />
+        </linearGradient>
+        <linearGradient id="label" x1="40" y1="0" x2="120" y2="0" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#ffd37a" stop-opacity="0.95" />
+          <stop offset="1" stop-color="#ffb84a" stop-opacity="0.95" />
+        </linearGradient>
+        <linearGradient id="cap" x1="62" y1="10" x2="98" y2="64" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#c9f5ff" stop-opacity="0.95" />
+          <stop offset="1" stop-color="#77cfe0" stop-opacity="0.9" />
+        </linearGradient>
+        <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="5" result="blur" />
+          <feColorMatrix
+            in="blur"
+            type="matrix"
+            values="
+            1 0 0 0 0
+            0 1 0 0 0
+            0 0 1 0 0
+            0 0 0 0.55 0"
+            result="glow"
+          />
+          <feMerge>
+            <feMergeNode in="glow" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+
+      <!-- Foam -->
+      <g class="foam" filter="url(#softGlow)">
+        <path
+          d="M64 46c-4-7 2-16 12-16s16 9 12 16c8-2 16 4 16 12 0 11-10 14-24 14H76c-14 0-24-3-24-14 0-8 8-14 16-12Z"
+          fill="rgba(255,255,255,0.9)"
+        />
+        <path
+          d="M61 62c7 6 31 6 38 0"
+          stroke="rgba(170,245,255,0.35)"
+          stroke-width="3"
+          stroke-linecap="round"
+        />
+      </g>
+
+      <!-- Cap -->
+      <path d="M62 62h36v18c0 7-8 12-18 12s-18-5-18-12V62Z" fill="url(#cap)" opacity="0.95" />
+      <path d="M62 62h36" stroke="rgba(255,255,255,0.6)" stroke-width="3" stroke-linecap="round" />
+
+      <!-- Neck -->
+      <path
+        d="M66 92c0-6 6-12 14-12h0c8 0 14 6 14 12v34c0 8 9 12 9 20v12H57v-12c0-8 9-12 9-20V92Z"
+        fill="url(#glass)"
+      />
+
+      <!-- Body -->
+      <path
+        d="M57 158h46c10 0 17 8 17 18v102c0 16-13 30-29 30H69c-16 0-29-14-29-30V176c0-10 7-18 17-18Z"
+        fill="url(#glass)"
+      />
+
+      <!-- Glass highlights -->
+      <path
+        class="shine"
+        d="M64 110c0-10 8-18 18-18h1c3 0 6 1 8 2-10 6-16 16-16 28v160c0 10 4 18 10 24H70c-4-5-6-11-6-18V110Z"
+        fill="url(#glassEdge)"
+        opacity="0.75"
+      />
+      <path
+        d="M104 170c8 0 14 7 14 15v90c0 14-11 26-25 26"
+        stroke="rgba(255,255,255,0.14)"
+        stroke-width="3"
+        stroke-linecap="round"
+      />
+
+      <!-- Label -->
+      <g filter="url(#softGlow)">
+        <path
+          d="M50 198c0-8 7-15 15-15h30c8 0 15 7 15 15v46c0 8-7 15-15 15H65c-8 0-15-7-15-15v-46Z"
+          fill="rgba(255,255,255,0.10)"
+          stroke="rgba(255,255,255,0.22)"
+        />
+        <path d="M58 192h64v58H58v-58Z" fill="url(#label)" opacity="0.90" />
+        <path
+          d="M64 214h52"
+          stroke="rgba(10, 42, 85, 0.45)"
+          stroke-width="6"
+          stroke-linecap="round"
+          opacity="0.65"
+        />
+        <path
+          d="M64 232h40"
+          stroke="rgba(10, 42, 85, 0.45)"
+          stroke-width="6"
+          stroke-linecap="round"
+          opacity="0.55"
+        />
+      </g>
+    </svg>
+
+    <main class="wrap">
+      <section class="card" role="group" aria-label="Новогодний отсчёт до 30.12.2025">
+        <div class="inner">
+          <h1>До сияния легенды осталось:</h1>
+          <p class="subtitle">
+            Новый год уже в воздухе: звёзды мерцают, снег идёт, а легендарная бутылка
+            летит навстречу финалу 2025.
+          </p>
+
+          <div class="glowline" aria-hidden="true"></div>
+
+          <div class="timer" aria-live="polite" aria-atomic="true">
+            <div class="tbox">
+              <div class="num" id="d">—</div>
+              <div class="lab">дней</div>
+            </div>
+            <div class="tbox">
+              <div class="num" id="h">—</div>
+              <div class="lab">часов</div>
+            </div>
+            <div class="tbox">
+              <div class="num" id="m">—</div>
+              <div class="lab">минут</div>
+            </div>
+            <div class="tbox">
+              <div class="num" id="s">—</div>
+              <div class="lab">секунд</div>
+            </div>
+          </div>
+
+          <p class="hint" id="targetText">Цель: 30.12.2025 23:59:59</p>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      (function () {
+        const target = new Date(2025, 11, 30, 23, 59, 59); // local time: 30.12.2025 23:59:59
+        const elD = document.getElementById("d");
+        const elH = document.getElementById("h");
+        const elM = document.getElementById("m");
+        const elS = document.getElementById("s");
+        const targetText = document.getElementById("targetText");
+
+        function pad2(n) {
+          return String(n).padStart(2, "0");
+        }
+
+        function tick() {
+          const now = new Date();
+          let diff = target.getTime() - now.getTime();
+
+          if (diff <= 0) {
+            elD.textContent = "0";
+            elH.textContent = "00";
+            elM.textContent = "00";
+            elS.textContent = "00";
+            targetText.textContent = "Сияние легенды наступило!";
+            return;
+          }
+
+          const totalSeconds = Math.floor(diff / 1000);
+          const days = Math.floor(totalSeconds / 86400);
+          const hours = Math.floor((totalSeconds % 86400) / 3600);
+          const minutes = Math.floor((totalSeconds % 3600) / 60);
+          const seconds = totalSeconds % 60;
+
+          elD.textContent = String(days);
+          elH.textContent = pad2(hours);
+          elM.textContent = pad2(minutes);
+          elS.textContent = pad2(seconds);
+        }
+
+        // Snow generator (no external assets)
+        const snow = document.getElementById("snow");
+        const flakeCount = Math.min(90, Math.max(48, Math.floor(window.innerWidth / 14)));
+        const rand = (a, b) => a + Math.random() * (b - a);
+
+        for (let i = 0; i < flakeCount; i++) {
+          const f = document.createElement("div");
+          f.className = "flake";
+          const size = rand(2, 6).toFixed(2) + "px";
+          const x = rand(0, 100).toFixed(2) + "vw";
+          const o = rand(0.25, 0.9).toFixed(2);
+          const d = rand(6, 14).toFixed(2) + "s";
+          const drift = (rand(-10, 10).toFixed(2) + "vw");
+
+          f.style.setProperty("--s", size);
+          f.style.setProperty("--x", x);
+          f.style.setProperty("--o", o);
+          f.style.setProperty("--d", d);
+          f.style.setProperty("--drift", drift);
+          f.style.animationDelay = (-rand(0, 14)).toFixed(2) + "s";
+          snow.appendChild(f);
+        }
+
+        tick();
+        setInterval(tick, 250);
+
+        // Show target in local format
+        const dd = String(target.getDate()).padStart(2, "0");
+        const mm = String(target.getMonth() + 1).padStart(2, "0");
+        const yyyy = target.getFullYear();
+        const hh = String(target.getHours()).padStart(2, "0");
+        const min = String(target.getMinutes()).padStart(2, "0");
+        const ss = String(target.getSeconds()).padStart(2, "0");
+        targetText.textContent = `Цель: ${dd}.${mm}.${yyyy} ${hh}:${min}:${ss}`;
+      })();
+    </script>
+  </body>
+</html>
