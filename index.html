@@ -21,11 +21,89 @@
             color: #fff;
             min-height: 100vh;
             padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Снежинки */
+        .snowflakes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .snowflake {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: snowfall linear infinite;
+        }
+        
+        @keyframes snowfall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(calc(100vh + 100px)) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Текст "САМЫЙ ЛУЧШИЙ ФУЛЛСТЕК" */
+        .fullstack-text {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: transparent;
+            background: linear-gradient(45deg, #ff0080, #00ffcc, #ffff00, #ff0080);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: gradient-text 5s ease infinite, glow 2s ease-in-out infinite alternate;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            padding: 10px 20px;
+            border-radius: 10px;
+            background-color: rgba(10, 10, 40, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            max-width: 300px;
+            text-align: center;
+        }
+        
+        @keyframes gradient-text {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            }
+            to {
+                box-shadow: 0 0 20px rgba(255, 255, 255, 0.7), 0 0 30px rgba(0, 255, 255, 0.5);
+            }
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
+            position: relative;
+            z-index: 2;
         }
         
         header {
@@ -36,6 +114,7 @@
             margin-bottom: 40px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(100, 100, 255, 0.2);
+            backdrop-filter: blur(5px);
         }
         
         h1 {
@@ -64,6 +143,7 @@
             max-width: 900px;
             box-shadow: 0 5px 25px rgba(0, 0, 0, 0.7);
             border: 1px solid rgba(100, 100, 255, 0.3);
+            backdrop-filter: blur(5px);
         }
         
         .timer-title {
@@ -94,7 +174,7 @@
         
         .time-unit:hover {
             transform: translateY(-5px);
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.8), 0 0 20px rgba(100, 100, 255, 0.3);
         }
         
         .time-value {
@@ -111,44 +191,6 @@
             color: #aaaaff;
             text-transform: uppercase;
             letter-spacing: 1px;
-        }
-        
-        .report-container {
-            background: rgba(15, 15, 50, 0.8);
-            border-radius: 15px;
-            padding: 30px;
-            margin-top: 40px;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.7);
-            border: 1px solid rgba(100, 100, 255, 0.3);
-        }
-        
-        .report-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.8rem;
-            margin-bottom: 25px;
-            color: #7aa2f7;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .report-title i {
-            font-size: 1.5rem;
-        }
-        
-        .report-content {
-            line-height: 1.7;
-            font-size: 1.1rem;
-            color: #e0e0ff;
-        }
-        
-        .report-content p {
-            margin-bottom: 20px;
-        }
-        
-        .highlight {
-            color: #bb86fc;
-            font-weight: 600;
         }
         
         .date-display {
@@ -169,6 +211,9 @@
             color: #8888cc;
             font-size: 0.9rem;
             border-top: 1px solid rgba(100, 100, 255, 0.2);
+            background-color: rgba(10, 10, 40, 0.5);
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
         }
         
         .pulse {
@@ -184,6 +229,14 @@
         @media (max-width: 768px) {
             h1 {
                 font-size: 2.5rem;
+            }
+            
+            .fullstack-text {
+                font-size: 1.2rem;
+                top: 10px;
+                right: 10px;
+                left: 10px;
+                max-width: none;
             }
             
             .time-unit {
@@ -205,6 +258,11 @@
                 font-size: 2rem;
             }
             
+            .fullstack-text {
+                font-size: 1rem;
+                padding: 8px 12px;
+            }
+            
             .time-unit {
                 min-width: 100px;
                 padding: 15px 8px;
@@ -221,6 +279,12 @@
     </style>
 </head>
 <body>
+    <!-- Снежинки -->
+    <div class="snowflakes" id="snowflakes"></div>
+    
+    <!-- Текст "САМЫЙ ЛУЧШИЙ ФУЛЛСТЕК" -->
+    <div class="fullstack-text">САМЫЙ ЛУЧШИЙ ФУЛЛСТЕК</div>
+    
     <div class="container">
         <header>
             <h1>ДО ДЕБЮТА ЛЕГЕНДЫ ОСТАЛОСЬ</h1>
@@ -269,6 +333,38 @@
         // Устанавливаем дату дебюта легенды
         const targetDate = new Date('December 30, 2025 00:00:00').getTime();
         
+        // Создаем снежинки
+        function createSnowflakes() {
+            const snowflakesContainer = document.getElementById('snowflakes');
+            const snowflakeCount = 50; // Количество снежинок
+            
+            for (let i = 0; i < snowflakeCount; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.classList.add('snowflake');
+                
+                // Случайный размер снежинки
+                const size = Math.random() * 10 + 5;
+                snowflake.style.width = `${size}px`;
+                snowflake.style.height = `${size}px`;
+                
+                // Случайная позиция
+                snowflake.style.left = `${Math.random() * 100}%`;
+                
+                // Случайная прозрачность
+                snowflake.style.opacity = Math.random() * 0.7 + 0.3;
+                
+                // Случайная скорость анимации
+                const duration = Math.random() * 10 + 10;
+                snowflake.style.animationDuration = `${duration}s`;
+                
+                // Случайная задержка анимации
+                snowflake.style.animationDelay = `${Math.random() * 5}s`;
+                
+                snowflakesContainer.appendChild(snowflake);
+            }
+        }
+        
+        // Функция обновления таймера
         function updateTimer() {
             // Получаем текущее время
             const now = new Date().getTime();
@@ -304,26 +400,35 @@
                 clearInterval(timerInterval);
                 document.querySelector('.timer-title').innerHTML = '<i class="fas fa-check-circle"></i> ЛЕГЕНДА ДЕБЮТИРОВАЛА!';
                 document.querySelector('.timer').innerHTML = '<div class="time-unit"><div class="time-value">00</div><div class="time-label">Дней</div></div><div class="time-unit"><div class="time-value">00</div><div class="time-label">Часов</div></div><div class="time-unit"><div class="time-value">00</div><div class="time-label">Минут</div></div><div class="time-unit"><div class="time-value">00</div><div class="time-label">Секунд</div></div>';
+                
+                // Меняем текст на заднем фоне
+                const fullstackText = document.querySelector('.fullstack-text');
+                fullstackText.textContent = 'ЛЕГЕНДА СТАЛА ФУЛЛСТЕКОМ!';
+                fullstackText.style.background = 'linear-gradient(45deg, #00ff00, #ffff00, #ff0000)';
+                fullstackText.style.backgroundSize = '400% 400%';
             }
         }
+        
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            // Создаем снежинки
+            createSnowflakes();
+            
+            // Обновляем дату в футере
+            const now = new Date();
+            document.getElementById('current-time').textContent = now.toLocaleTimeString('ru-RU');
+            
+            // Добавляем CSS класс для highlight, если его нет в HTML
+            const style = document.createElement('style');
+            style.textContent = '.highlight { color: #bb86fc; font-weight: 600; }';
+            document.head.appendChild(style);
+        });
         
         // Обновляем таймер каждую секунду
         const timerInterval = setInterval(updateTimer, 1000);
         
         // Инициализируем таймер при загрузке страницы
         updateTimer();
-        
-        // Добавляем случайную генерацию процентов готовности для реалистичности
-        document.addEventListener('DOMContentLoaded', function() {
-            // Генерируем случайный процент готовности между 85% и 92%
-            const randomPercent = Math.floor(Math.random() * (92 - 85 + 1)) + 85;
-            const percentElement = document.querySelector('.report-content p:nth-child(2) span.highlight');
-            percentElement.textContent = `Завершено ${randomPercent}% подготовительных работ`;
-            
-            // Обновляем дату в футере
-            const now = new Date();
-            document.getElementById('current-time').textContent = now.toLocaleTimeString('ru-RU');
-        });
     </script>
 </body>
 </html>
