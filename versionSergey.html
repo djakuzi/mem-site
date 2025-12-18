@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>До сияния легенды</title>
+    <style>
+        body {
+            background: #000;
+            background: radial-gradient(ellipse at bottom, #0b0b2a 0%, #000000 100%);
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        #legend-bottle {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            width: 100px;
+            height: 260px;
+            z-index: 5;
+            animation: sway 12s ease-in-out infinite;
+            transform-origin: bottom center;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, var(--glow, 0.2)));
+        }
+
+        @keyframes sway {
+            0%, 100% { transform: rotate(-2.5deg); }
+            50% { transform: rotate(2.5deg); }
+        }
+
+        /* Текст */
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+            z-index: 10;
+            position: relative;
+        }
+
+        #countdown {
+            font-size: 3em;
+            font-weight: bold;
+            color: gold;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.9);
+            z-index: 10;
+            position: relative;
+        }
+
+        p {
+            font-size: 1.2em;
+            margin-top: 20px;
+            z-index: 10;
+            position: relative;
+            color: #d0d0ff;
+        }
+
+        .snowflake {
+            position: absolute;
+            top: -20px;
+            color: #fff;
+            font-size: 1.2em;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+            user-select: none;
+            pointer-events: none;
+            z-index: 2;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(105vh) rotate(360deg); }
+        }
+
+        .spark {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: gold;
+            border-radius: 50%;
+            z-index: 6;
+            opacity: 0;
+            animation: spark-rise 3s forwards;
+        }
+
+        @keyframes spark-rise {
+            0% { opacity: 0; transform: translateY(0) scale(0.5); }
+            10% { opacity: 1; }
+            90% { opacity: 0.8; }
+            100% { opacity: 0; transform: translateY(-200px) translateX(var(--dx, 0)) scale(1.5); }
+        }
+    </style>
+</head>
+<body>
+<a href="./index.html" style="font-size: 16px; font-weight: 600; color: white; position: absolute; left: 20px; top: 20px; display: inline-block;">Версия Матвей</a>
+<h1>Осталось</h1>
+<div id="countdown">--:--:--:--</div>
+<p>до того как легенда начнёт сиять</p>
+
+<div id="legend-bottle">
+    <svg viewBox="0 0 100 260" width="100%" height="100%">
+        <!-- Стекло -->
+        <path d="M30,250 Q50,260 70,250 L75,80 Q70,60 50,50 Q30,60 25,80 Z"
+              fill="none" stroke="rgba(180,180,200,0.4)" stroke-width="1.5" />
+
+        <!-- Пиво (магическое) -->
+        <path id="magic-beer" d="M32,245 Q50,255 68,245 L72,100 Q68,85 50,80 Q32,85 28,100 Z"
+              fill="#D4A017" opacity="0.85" />
+
+        <!-- Пена (звёздная) -->
+        <g id="magic-foam">
+            <ellipse cx="50" cy="85" rx="20" ry="6" fill="white" opacity="0.9">
+                <animate attributeName="opacity" values="0.7;1;0.7" dur="4s" repeatCount="indefinite" />
+            </ellipse>
+        </g>
+
+        <!-- Этикетка -->
+        <rect x="30" y="120" width="40" height="60" rx="4" fill="#100800" opacity="0.85" />
+        <text x="50" y="145" text-anchor="middle" fill="gold" font-size="8" font-family="Verdana" opacity="0.95">ЛЕГЕНДА</text>
+        <text x="50" y="158" text-anchor="middle" fill="gold" font-size="5" font-family="Verdana" opacity="0.8">2025</text>
+    </svg>
+</div>
+
+<script>
+    const targetDate = new Date('2025-12-30T00:00:00').getTime();
+    const now = new Date().getTime();
+    const totalDays = 12;
+    const daysLeft = Math.max(0, Math.ceil((targetDate - now) / (1000 * 60 * 60 * 24)));
+    const progress = 1 - daysLeft / totalDays; // от 0 (18 дек) до 1 (30 дек)
+    const glow = Math.min(1, 0.2 + progress * 0.8); // свечение от 0.2 до 1.0
+
+    // === Обновляем стиль бутылки в зависимости от прогресса ===
+    const bottle = document.getElementById('legend-bottle');
+    bottle.style.setProperty('--glow', glow);
+
+    // Меняем цвет пива на более "магический" (янтарь → золото)
+    const beer = document.getElementById('magic-beer');
+    const foam = document.getElementById('magic-foam');
+
+    // Интерполяция цвета: от #D4A017 → #FFD700 (золото)
+    const r = Math.round(212 + (255 - 212) * progress);
+    const g = Math.round(160 + (215 - 160) * progress);
+    const b = Math.round(23 + (0 - 23) * progress);
+    beer.setAttribute('fill', `rgb(${r}, ${g}, ${b})`);
+    beer.setAttribute('opacity', 0.7 + 0.3 * progress);
+
+    // Пена становится светящейся
+    foam.querySelector('ellipse').setAttribute('fill', `rgba(255, 255, 255, ${0.7 + 0.3 * progress})`);
+
+    // === Звёзды (ярче с каждым днём) ===
+    const starCount = 200;
+    for (let i = 0; i < starCount; i++) {
+        const star = document.createElement('div');
+        star.classList.add('star');
+        const size = Math.random() * 3 + 1;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.left = `${Math.random() * 100}vw`;
+        star.style.top = `${Math.random() * 100}vh`;
+        star.style.opacity = (Math.random() * 0.6 + 0.3) * glow;
+        star.style.animation = `twinkle ${Math.random() * 4 + 2}s infinite alternate`;
+        document.body.appendChild(star);
+    }
+
+    const style = document.createElement('style');
+    style.innerHTML = `
+      @keyframes twinkle {
+        0% { opacity: ${glow * 0.3}; }
+        100% { opacity: ${glow * 1.0}; }
+      }
+    `;
+    document.head.appendChild(style);
+
+    // === Искры вместо пузырьков (магические) ===
+    function createSpark() {
+        const spark = document.createElement('div');
+        spark.classList.add('spark');
+        spark.style.left = `${35 + Math.random() * 30}px`;
+        spark.style.bottom = '0px';
+        spark.style.setProperty('--dx', (Math.random() - 0.5) * 30);
+        spark.style.animationDuration = `${2.5 + Math.random() * 1.5}s`;
+        bottle.appendChild(spark);
+        setTimeout(() => spark.remove(), 4000);
+    }
+
+    if (progress > 0.1) { // только если уже немного "заряжена"
+        const sparkInterval = setInterval(createSpark, 900 - progress * 700);
+        // Остановим через 10 сек, чтобы не перегружать
+        setTimeout(() => clearInterval(sparkInterval), 10000);
+    }
+
+    // === Обратный отсчёт ===
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const diff = targetDate - now;
+        if (diff <= 0) {
+            document.getElementById('countdown').innerHTML = '00:00:00:00';
+            return;
+        }
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        document.getElementById('countdown').innerHTML =
+            `${String(days).padStart(2, '0')}:${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // === Снег ===
+    const snowflakesCount = 100;
+    for (let i = 0; i < snowflakesCount; i++) {
+        const snowflake = document.createElement('div');
+        snowflake.innerHTML = '❄';
+        snowflake.classList.add('snowflake');
+        snowflake.style.left = `${Math.random() * 100}vw`;
+        snowflake.style.fontSize = `${Math.random() * 1.2 + 0.4}em`;
+        snowflake.style.opacity = Math.random() * 0.6 + 0.3;
+        snowflake.style.animationDuration = `${Math.random() * 10 + 5}s`;
+        snowflake.style.animationDelay = `${Math.random() * 5}s`;
+        document.body.appendChild(snowflake);
+    }
+</script>
+</body>
+</html>
