@@ -1,1 +1,567 @@
-<a href="./index.html" style="font-size: 16px; font-weight: 600; color: white; position: absolute; left: 20px; top: 20px; display: inline-block;">Назад</a>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>До сияния легенды</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@300;400;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            color: #fff;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            background: #000;
+        }
+
+        .background-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('./i.webp');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            z-index: 0;
+        }
+
+        .background-image.visible {
+            opacity: 1;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.5) 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            width: 100%;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4em;
+            margin-bottom: 50px;
+            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.9), 0 0 30px rgba(255, 165, 0, 0.6), 0 0 60px rgba(255, 165, 0, 0.3);
+            font-weight: 700;
+            letter-spacing: 3px;
+            animation: titleGlow 4s ease-in-out infinite;
+            background: linear-gradient(135deg, #fff 0%, #ffa500 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% {
+                filter: drop-shadow(0 0 20px rgba(255, 165, 0, 0.6));
+            }
+            50% {
+                filter: drop-shadow(0 0 40px rgba(255, 165, 0, 0.9));
+            }
+        }
+
+        .timer {
+            font-size: 4.5em;
+            font-weight: bold;
+            margin: 50px 0;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 40px rgba(255, 165, 0, 0.9), 3px 3px 6px rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+        }
+
+        .timer-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 25px 35px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            border: 3px solid rgba(255, 165, 0, 0.4);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 165, 0, 0.3), inset 0 0 20px rgba(255, 165, 0, 0.1);
+            min-width: 160px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .timer-unit:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7), 0 0 40px rgba(255, 165, 0, 0.5), inset 0 0 30px rgba(255, 165, 0, 0.2);
+            border-color: rgba(255, 165, 0, 0.7);
+        }
+
+        .timer-value {
+            font-size: 1.3em;
+            color: #ffa500;
+            text-shadow: 0 0 20px rgba(255, 165, 0, 0.8);
+            font-weight: bold;
+        }
+
+        .timer-label {
+            font-size: 0.35em;
+            margin-top: 12px;
+            opacity: 0.95;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .image-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes glassPulse {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 0.8;
+            }
+            50% {
+                transform: scale(1.4) rotate(180deg);
+                opacity: 1;
+            }
+        }
+
+        @keyframes eyePulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.8;
+                box-shadow: 0 0 20px rgba(255, 255, 0, 0.8);
+            }
+            50% {
+                transform: scale(1.5);
+                opacity: 1;
+                box-shadow: 0 0 40px rgba(255, 255, 0, 1), 0 0 60px rgba(255, 255, 0, 0.6);
+            }
+        }
+
+        .text-message {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8em;
+            margin: 35px 0;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-weight: 700;
+            letter-spacing: 2px;
+            padding: 25px 40px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 165, 0, 0.2);
+            max-width: 90%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .text-message.visible {
+            opacity: 1;
+            transform: translateY(0);
+            animation: textShine 3.5s ease-in-out infinite;
+        }
+
+        @keyframes textShine {
+            0%, 100% {
+                text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.9), 
+                            0 0 20px rgba(255, 255, 255, 0.7), 
+                            0 0 35px rgba(255, 165, 0, 0.6),
+                            0 0 50px rgba(255, 165, 0, 0.3);
+                border-color: rgba(255, 165, 0, 0.2);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 165, 0, 0.2);
+            }
+            50% {
+                text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.9), 
+                            0 0 30px rgba(255, 255, 255, 0.95), 
+                            0 0 50px rgba(255, 165, 0, 0.9),
+                            0 0 70px rgba(255, 165, 0, 0.6),
+                            0 0 90px rgba(255, 165, 0, 0.3);
+                border-color: rgba(255, 165, 0, 0.5);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 30px rgba(255, 165, 0, 0.4);
+            }
+        }
+
+        .text-message.shine {
+            animation: textShineIntense 2s ease-in-out infinite;
+        }
+
+        @keyframes textShineIntense {
+            0%, 100% {
+                text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.9), 
+                            0 0 40px rgba(255, 255, 255, 1), 
+                            0 0 60px rgba(255, 165, 0, 1),
+                            0 0 90px rgba(255, 165, 0, 0.8),
+                            0 0 120px rgba(255, 165, 0, 0.5);
+                border-color: rgba(255, 165, 0, 0.7);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 40px rgba(255, 165, 0, 0.6);
+            }
+            50% {
+                text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.9), 
+                            0 0 50px rgba(255, 255, 255, 1), 
+                            0 0 80px rgba(255, 165, 0, 1),
+                            0 0 110px rgba(255, 165, 0, 1),
+                            0 0 150px rgba(255, 165, 0, 0.8);
+                border-color: rgba(255, 165, 0, 1);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 60px rgba(255, 165, 0, 0.8);
+            }
+        }
+
+        /* Снежинки */
+        .snowflakes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .snowflake {
+            position: absolute;
+            color: #fff;
+            font-size: 1.8em;
+            font-family: Arial;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+            animation: snowfall linear infinite;
+            opacity: 0.8;
+            user-select: none;
+            top: -50px;
+        }
+
+        @keyframes snowfall {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+            }
+            25% {
+                transform: translateY(25vh) translateX(15px) rotate(90deg);
+            }
+            50% {
+                transform: translateY(50vh) translateX(-10px) rotate(180deg);
+            }
+            75% {
+                transform: translateY(75vh) translateX(20px) rotate(270deg);
+            }
+            100% {
+                transform: translateY(100vh) translateX(0) rotate(360deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+                letter-spacing: 1px;
+            }
+
+            .timer {
+                font-size: 2.8em;
+                gap: 15px;
+            }
+
+            .timer-unit {
+                min-width: 120px;
+                padding: 20px 25px;
+            }
+
+            .text-message {
+                font-size: 1.8em;
+                padding: 20px 30px;
+            }
+
+            .eyes-shine.right {
+                left: 52%;
+                top: 28%;
+            }
+
+            .glass-shine {
+                left: 9%;
+                top: 40%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .timer {
+                font-size: 2em;
+            }
+
+            .timer-unit {
+                min-width: 100px;
+                padding: 15px 20px;
+            }
+
+            .text-message {
+                font-size: 1.4em;
+                padding: 15px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="./index.html" style="font-size: 16px; font-weight: 600; color: white; position: absolute; left: 20px; top: 20px; display: inline-block; z-index: 2;">Назад</a>
+    <div class="background-image" id="backgroundImage"></div>
+    <div class="overlay"></div>
+    <div class="snowflakes" id="snowflakes"></div>
+    
+    <div class="container">
+        <h1>До сияния легенды осталось:</h1>
+        
+        <div class="timer" id="timer">
+            <span class="timer-unit">
+                <span class="timer-value" id="days">00</span>
+                <span class="timer-label">дней</span>
+            </span>
+            <span class="timer-unit">
+                <span class="timer-value" id="hours">00</span>
+                <span class="timer-label">часов</span>
+            </span>
+            <span class="timer-unit">
+                <span class="timer-value" id="minutes">00</span>
+                <span class="timer-label">минут</span>
+            </span>
+            <span class="timer-unit">
+                <span class="timer-value" id="seconds">00</span>
+                <span class="timer-label">секунд</span>
+            </span>
+        </div>
+
+        <div class="image-container" id="imageContainer">
+            <div class="glass-shine" id="glassShine"></div>
+            <div class="eyes-shine right" id="rightEye"></div>
+        </div>
+
+        <div class="text-message" id="text1">Я буду бухать так ярко...</div>
+        <div class="text-message" id="text2">Я сожгу айтигрейд до тла...</div>
+        <div class="text-message" id="text3">Останется только сходить в больницу на четыре часа...</div>
+    </div>
+
+    <script>
+        const targetDate = new Date('2025-12-30T00:00:00').getTime();
+        
+        const timer = document.getElementById('timer');
+        const daysEl = document.getElementById('days');
+        const hoursEl = document.getElementById('hours');
+        const minutesEl = document.getElementById('minutes');
+        const secondsEl = document.getElementById('seconds');
+        
+        const backgroundImage = document.getElementById('backgroundImage');
+        const glassShine = document.getElementById('glassShine');
+        const rightEye = document.getElementById('rightEye');
+        
+        const text1 = document.getElementById('text1');
+        const text2 = document.getElementById('text2');
+        const text3 = document.getElementById('text3');
+        const snowflakesContainer = document.getElementById('snowflakes');
+
+        // Настройка позиций глаз (можно изменить здесь)
+        // Формат: { left: 'X%', top: 'Y%' }
+        const eyePositions = {
+            right: { left: '70%', top: '30%' }
+        };
+
+        // Применяем позиции глаз
+        function applyEyePositions() {
+            rightEye.style.left = eyePositions.right.left;
+            rightEye.style.top = eyePositions.right.top;
+        }
+
+        // Функция для настройки позиций через консоль (для отладки)
+        window.setEyePosition = function(eye, left, top) {
+            if (eye === 'left') {
+                eyePositions.left.left = left + '%';
+                eyePositions.left.top = top + '%';
+            } else if (eye === 'right') {
+                eyePositions.right.left = left + '%';
+                eyePositions.right.top = top + '%';
+            }
+            applyEyePositions();
+            console.log('Позиции глаз обновлены:', eyePositions);
+        };
+
+        applyEyePositions();
+
+        // Создание снежинок
+        const snowflakeSymbols = ['❄', '❅', '❆', '✻', '✼', '✽', '✾', '✿', '✦', '✧'];
+        const snowflakes = [];
+
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.className = 'snowflake';
+            snowflake.textContent = snowflakeSymbols[Math.floor(Math.random() * snowflakeSymbols.length)];
+            snowflake.style.left = Math.random() * 100 + '%';
+            snowflake.style.top = '-50px';
+            const duration = Math.random() * 4 + 3; // от 3 до 7 секунд
+            snowflake.style.animationDuration = duration + 's';
+            snowflake.style.animationDelay = Math.random() * 2 + 's';
+            snowflake.style.opacity = 0.8;
+            snowflakesContainer.appendChild(snowflake);
+            snowflakes.push(snowflake);
+
+            // Удаляем снежинку после падения
+            setTimeout(() => {
+                if (snowflake.parentNode) {
+                    snowflake.parentNode.removeChild(snowflake);
+                }
+                const index = snowflakes.indexOf(snowflake);
+                if (index > -1) {
+                    snowflakes.splice(index, 1);
+                }
+            }, (duration + 2) * 1000);
+        }
+
+        // Создаём снежинки периодически
+        setInterval(createSnowflake, 250);
+
+        function updateSnowflakesShine(days) {
+            // Интенсивность сияния снежинок увеличивается с приближением даты
+            let intensity = 0;
+            if (days <= 11) {
+                intensity = (11 - days) / 11; // от 0 до 1
+            }
+
+            snowflakes.forEach(snowflake => {
+                const baseOpacity = 0.8;
+                const shineOpacity = Math.min(1, baseOpacity + (intensity * 0.2));
+                const glowIntensity = intensity * 25;
+                const orangeGlow = intensity * 15;
+                snowflake.style.opacity = shineOpacity;
+                snowflake.style.textShadow = `
+                    0 0 ${8 + glowIntensity}px rgba(255, 255, 255, ${0.6 + intensity * 0.4}), 
+                    0 0 ${15 + orangeGlow}px rgba(255, 165, 0, ${intensity * 0.7}),
+                    0 0 ${25 + orangeGlow * 2}px rgba(255, 165, 0, ${intensity * 0.4})
+                `;
+            });
+        }
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance < 0) {
+                // Отсчёт закончился
+                daysEl.textContent = '00';
+                hoursEl.textContent = '00';
+                minutesEl.textContent = '00';
+                secondsEl.textContent = '00';
+                
+                // Скрываем все надписи, кроме таймера и картинки
+                text1.classList.remove('visible', 'shine');
+                text2.classList.remove('visible', 'shine');
+                text3.classList.remove('visible', 'shine');
+                
+                // Картинка остаётся видимой
+                backgroundImage.classList.add('visible');
+                
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            daysEl.textContent = String(days).padStart(2, '0');
+            hoursEl.textContent = String(hours).padStart(2, '0');
+            minutesEl.textContent = String(minutes).padStart(2, '0');
+            secondsEl.textContent = String(seconds).padStart(2, '0');
+
+            // Логика проявления элементов
+            updateVisibility(days);
+            updateSnowflakesShine(days);
+        }
+
+        function updateVisibility(days) {
+            // Картинка: с 11 по 7 дней постепенно проявляется, с 5 по 3 продолжает и становится полностью видимой
+            if (days <= 11 && days >= 7) {
+                const progress = (11 - days) / 5;
+                backgroundImage.style.opacity = progress * 0.5;
+                backgroundImage.classList.add('visible');
+            } else if (days <= 6 && days >= 3) {
+                const progress = (6 - days) / 4;
+                backgroundImage.style.opacity = 0.5 + (progress * 0.5);
+                backgroundImage.classList.add('visible');
+            } else if (days < 3) {
+                backgroundImage.style.opacity = 1;
+                backgroundImage.classList.add('visible');
+            } else {
+                backgroundImage.style.opacity = 0;
+                backgroundImage.classList.remove('visible');
+            }
+
+            // Первая надпись появляется на 6 днях и сияет
+            if (days <= 6 && days > 0) {
+                text1.classList.add('visible');
+            } else {
+                text1.classList.remove('visible', 'shine');
+            }
+
+            // Вторая надпись появляется на 2 днях и сияет
+            if (days <= 2 && days > 0) {
+                text2.classList.add('visible');
+            } else {
+                text2.classList.remove('visible', 'shine');
+            }
+
+            // Третья надпись появляется на 0 днях
+            if (days === 0) {
+                text3.classList.add('visible');
+                // Все надписи начинают сиять интенсивнее
+                text1.classList.add('shine');
+                text2.classList.add('shine');
+                text3.classList.add('shine');
+            } else {
+                text3.classList.remove('visible', 'shine');
+            }
+
+            // Бокал и глаза начинают сиять на 1 дне
+            if (days === 1) {
+                glassShine.classList.add('active');
+                rightEye.classList.add('active');
+            } else {
+                glassShine.classList.remove('active');
+                rightEye.classList.remove('active');
+            }
+        }
+
+        // Обновляем каждую секунду
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    </script>
+</body>
+</html>
