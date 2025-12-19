@@ -273,6 +273,46 @@
         }
       }
 
+      .bottle--2 {
+        top: 30vh;
+        width: clamp(72px, 9vw, 118px);
+        opacity: 0.92;
+        animation:
+          flyAcross2 12.8s ease-in-out infinite alternate,
+          bob2 3.1s ease-in-out infinite;
+        filter: drop-shadow(0 18px 18px rgba(0, 0, 0, 0.28))
+          drop-shadow(0 0 22px rgba(174, 245, 255, 0.14));
+      }
+
+      .bottle--3 {
+        top: 58vh;
+        width: clamp(62px, 8vw, 104px);
+        opacity: 0.86;
+        animation:
+          flyAcross3 10.6s ease-in-out infinite alternate,
+          bob3 2.4s ease-in-out infinite;
+        filter: drop-shadow(0 18px 18px rgba(0, 0, 0, 0.26))
+          drop-shadow(0 0 18px rgba(255, 211, 122, 0.14));
+      }
+
+      @keyframes flyAcross2 {
+        0% {
+          transform: translate3d(120vw, 0, 0) rotate(10deg);
+        }
+        100% {
+          transform: translate3d(-30vw, 0, 0) rotate(-12deg);
+        }
+      }
+
+      @keyframes flyAcross3 {
+        0% {
+          transform: translate3d(-25vw, 0, 0) rotate(-10deg);
+        }
+        100% {
+          transform: translate3d(118vw, 0, 0) rotate(14deg);
+        }
+      }
+
       @keyframes bob {
         0% {
           translate: 0 0;
@@ -317,6 +357,270 @@
         }
       }
 
+      @keyframes bob2 {
+        0% {
+          translate: 0 0;
+        }
+        50% {
+          translate: 0 22px;
+        }
+        100% {
+          translate: 0 0;
+        }
+      }
+
+      @keyframes bob3 {
+        0% {
+          translate: 0 0;
+        }
+        50% {
+          translate: 0 14px;
+        }
+        100% {
+          translate: 0 0;
+        }
+      }
+
+      /* Sparkler (bengal lights) */
+      .sparklers {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 6;
+      }
+
+      .sparkler {
+        position: absolute;
+        bottom: 7vh;
+        width: 150px;
+        height: 220px;
+      }
+
+      .sparkler--left {
+        left: 5vw;
+        transform: rotate(-10deg);
+      }
+
+      .sparkler--right {
+        right: 5vw;
+        transform: rotate(10deg) scaleX(-1);
+      }
+
+      .sparkler .stick {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 8px;
+        height: 170px;
+        transform: translateX(-50%);
+        border-radius: 6px;
+        background: linear-gradient(180deg, rgba(255, 230, 190, 0.85), rgba(180, 140, 90, 0.65));
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.28);
+      }
+
+      .sparkler .wire {
+        position: absolute;
+        bottom: 150px;
+        left: 50%;
+        width: 4px;
+        height: 58px;
+        transform: translateX(-50%);
+        border-radius: 6px;
+        background: linear-gradient(180deg, rgba(200, 220, 230, 0.95), rgba(140, 160, 170, 0.75));
+      }
+
+      .sparkler .tip {
+        position: absolute;
+        bottom: 200px;
+        left: 50%;
+        width: 18px;
+        height: 18px;
+        transform: translateX(-50%);
+        border-radius: 50%;
+        background: radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.95), rgba(255, 220, 160, 0.75));
+        box-shadow:
+          0 0 22px rgba(255, 211, 122, 0.55),
+          0 0 50px rgba(174, 245, 255, 0.18);
+        animation: tipFlicker 0.18s infinite alternate;
+      }
+
+      @keyframes tipFlicker {
+        from {
+          transform: translateX(-50%) scale(0.95);
+          filter: brightness(1);
+        }
+        to {
+          transform: translateX(-50%) scale(1.08);
+          filter: brightness(1.2);
+        }
+      }
+
+      .spark {
+        position: absolute;
+        left: var(--ox);
+        bottom: var(--oy);
+        width: var(--sz);
+        height: var(--sz);
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.95), rgba(255, 211, 122, 0.55), rgba(174, 245, 255, 0.0));
+        filter: blur(0.2px) saturate(130%);
+        opacity: 0.95;
+        transform: translate3d(0, 0, 0);
+        animation: sparkFly var(--t) ease-out forwards;
+        mix-blend-mode: screen;
+      }
+
+      .spark::after {
+        content: "";
+        position: absolute;
+        inset: -120%;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255, 211, 122, 0.18), transparent 60%);
+        opacity: 0.9;
+      }
+
+      @keyframes sparkFly {
+        0% {
+          transform: translate3d(0, 0, 0) scale(1);
+          opacity: 0.95;
+        }
+        70% {
+          opacity: 0.55;
+        }
+        100% {
+          transform: translate3d(var(--dx), var(--dy), 0) scale(0.2);
+          opacity: 0;
+        }
+      }
+
+      /* Party popper (click) */
+      .poppers {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 7;
+      }
+
+      .popper {
+        position: absolute;
+        width: 70px;
+        height: 70px;
+        translate: -50% -50%;
+        transform: rotate(var(--rot));
+        opacity: 1;
+        animation: popperFade 1200ms ease-out forwards;
+        filter: drop-shadow(0 14px 18px rgba(0, 0, 0, 0.25));
+      }
+
+      @keyframes popperFade {
+        0% {
+          opacity: 1;
+        }
+        70% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+
+      .popper .cone {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 54px;
+        height: 54px;
+        translate: -50% -30%;
+        border-radius: 14px;
+        background: linear-gradient(135deg, rgba(255, 211, 122, 0.95), rgba(255, 120, 160, 0.75));
+        clip-path: polygon(50% 0%, 100% 75%, 50% 100%, 0% 75%);
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18) inset;
+      }
+
+      .popper .cone::before {
+        content: "";
+        position: absolute;
+        inset: 6px 8px;
+        border-radius: 12px;
+        background: repeating-linear-gradient(
+          45deg,
+          rgba(255, 255, 255, 0.28) 0 6px,
+          rgba(255, 255, 255, 0.08) 6px 12px
+        );
+        opacity: 0.7;
+        clip-path: polygon(50% 0%, 100% 75%, 50% 100%, 0% 75%);
+      }
+
+      .popper .cap {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 20px;
+        height: 20px;
+        translate: -50% -110%;
+        border-radius: 50%;
+        background: radial-gradient(circle at 40% 35%, rgba(255, 255, 255, 0.95), rgba(174, 245, 255, 0.65));
+        box-shadow: 0 0 22px rgba(174, 245, 255, 0.35);
+        animation: popperPulse 420ms ease-out;
+      }
+
+      @keyframes popperPulse {
+        0% {
+          transform: scale(0.85);
+          filter: brightness(1);
+        }
+        100% {
+          transform: scale(1.15);
+          filter: brightness(1.25);
+        }
+      }
+
+      .confetti {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        translate: -50% -120%;
+        width: 0;
+        height: 0;
+      }
+
+      .conf {
+        position: absolute;
+        width: var(--w);
+        height: var(--h);
+        left: 0;
+        top: 0;
+        border-radius: 2px;
+        background: var(--c);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.12);
+        transform: translate3d(0, 0, 0) rotate(0deg);
+        animation:
+          confettiFly var(--t) cubic-bezier(0.2, 0.9, 0.2, 1) forwards,
+          confettiSpin var(--spin) linear forwards;
+        will-change: transform, opacity;
+        opacity: 0.98;
+      }
+
+      @keyframes confettiFly {
+        0% {
+          transform: translate3d(0, 0, 0) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translate3d(var(--dx), var(--dy), 0) rotate(0deg);
+          opacity: 0;
+        }
+      }
+
+      @keyframes confettiSpin {
+        0% {
+          rotate: 0deg;
+        }
+        100% {
+          rotate: var(--rz);
+        }
+      }
+
       /* Responsive timer wrapping */
       @media (max-width: 520px) {
         .timer {
@@ -336,14 +640,18 @@
         .flake,
         .bottle,
         .bottle .shine,
-        .bottle .foam {
+        .bottle .foam,
+        .sparkler .tip,
+        .spark,
+        .popper,
+        .conf {
           animation: none !important;
         }
       }
     </style>
   </head>
   <body>
-    <a href="./index.html" style="font-size: 16px; font-weight: 600; color: white; position: absolute; left: 20px; top: 20px; display: inline-block; z-index: 2;">Назад</a>
+      <a href="./index.html" style="font-size: 16px; font-weight: 600; color: white; position: absolute; left: 20px; top: 20px; display: inline-block; z-index: 101;">Назад</a>
     <div class="aurora" aria-hidden="true"></div>
     <div class="stars" aria-hidden="true"></div>
 
@@ -465,6 +773,239 @@
       </g>
     </svg>
 
+    <svg
+      class="bottle bottle--2"
+      viewBox="0 0 160 320"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient id="glass2" x1="55" y1="40" x2="110" y2="300" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#2e6c2f" stop-opacity="0.95" />
+          <stop offset="0.45" stop-color="#1f4f24" stop-opacity="0.95" />
+          <stop offset="1" stop-color="#153b1b" stop-opacity="0.95" />
+        </linearGradient>
+        <linearGradient id="glassEdge2" x1="48" y1="40" x2="120" y2="280" gradientUnits="userSpaceOnUse">
+          <stop stop-color="rgba(255,255,255,0.35)" />
+          <stop offset="0.25" stop-color="rgba(255,255,255,0.10)" />
+          <stop offset="0.7" stop-color="rgba(255,255,255,0.00)" />
+          <stop offset="1" stop-color="rgba(255,255,255,0.14)" />
+        </linearGradient>
+        <linearGradient id="label2" x1="40" y1="0" x2="120" y2="0" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#aef5ff" stop-opacity="0.92" />
+          <stop offset="1" stop-color="#77cfe0" stop-opacity="0.9" />
+        </linearGradient>
+        <linearGradient id="cap2" x1="62" y1="10" x2="98" y2="64" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#ffd37a" stop-opacity="0.95" />
+          <stop offset="1" stop-color="#ffb84a" stop-opacity="0.9" />
+        </linearGradient>
+        <filter id="softGlow2" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="5" result="blur" />
+          <feColorMatrix
+            in="blur"
+            type="matrix"
+            values="
+            1 0 0 0 0
+            0 1 0 0 0
+            0 0 1 0 0
+            0 0 0 0.55 0"
+            result="glow"
+          />
+          <feMerge>
+            <feMergeNode in="glow" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+
+      <g class="foam" filter="url(#softGlow2)">
+        <path
+          d="M64 46c-4-7 2-16 12-16s16 9 12 16c8-2 16 4 16 12 0 11-10 14-24 14H76c-14 0-24-3-24-14 0-8 8-14 16-12Z"
+          fill="rgba(255,255,255,0.9)"
+        />
+        <path
+          d="M61 62c7 6 31 6 38 0"
+          stroke="rgba(170,245,255,0.35)"
+          stroke-width="3"
+          stroke-linecap="round"
+        />
+      </g>
+
+      <path d="M62 62h36v18c0 7-8 12-18 12s-18-5-18-12V62Z" fill="url(#cap2)" opacity="0.95" />
+      <path d="M62 62h36" stroke="rgba(255,255,255,0.6)" stroke-width="3" stroke-linecap="round" />
+
+      <path
+        d="M66 92c0-6 6-12 14-12h0c8 0 14 6 14 12v34c0 8 9 12 9 20v12H57v-12c0-8 9-12 9-20V92Z"
+        fill="url(#glass2)"
+      />
+
+      <path
+        d="M57 158h46c10 0 17 8 17 18v102c0 16-13 30-29 30H69c-16 0-29-14-29-30V176c0-10 7-18 17-18Z"
+        fill="url(#glass2)"
+      />
+
+      <path
+        class="shine"
+        d="M64 110c0-10 8-18 18-18h1c3 0 6 1 8 2-10 6-16 16-16 28v160c0 10 4 18 10 24H70c-4-5-6-11-6-18V110Z"
+        fill="url(#glassEdge2)"
+        opacity="0.75"
+      />
+      <path
+        d="M104 170c8 0 14 7 14 15v90c0 14-11 26-25 26"
+        stroke="rgba(255,255,255,0.14)"
+        stroke-width="3"
+        stroke-linecap="round"
+      />
+
+      <g filter="url(#softGlow2)">
+        <path
+          d="M50 198c0-8 7-15 15-15h30c8 0 15 7 15 15v46c0 8-7 15-15 15H65c-8 0-15-7-15-15v-46Z"
+          fill="rgba(255,255,255,0.10)"
+          stroke="rgba(255,255,255,0.22)"
+        />
+        <path d="M58 192h64v58H58v-58Z" fill="url(#label2)" opacity="0.90" />
+        <path
+          d="M64 214h52"
+          stroke="rgba(10, 42, 85, 0.45)"
+          stroke-width="6"
+          stroke-linecap="round"
+          opacity="0.55"
+        />
+        <path
+          d="M64 232h40"
+          stroke="rgba(10, 42, 85, 0.45)"
+          stroke-width="6"
+          stroke-linecap="round"
+          opacity="0.45"
+        />
+      </g>
+    </svg>
+
+    <svg
+      class="bottle bottle--3"
+      viewBox="0 0 160 320"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient id="glass3" x1="55" y1="40" x2="110" y2="300" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#2e6c2f" stop-opacity="0.95" />
+          <stop offset="0.45" stop-color="#1f4f24" stop-opacity="0.95" />
+          <stop offset="1" stop-color="#153b1b" stop-opacity="0.95" />
+        </linearGradient>
+        <linearGradient id="glassEdge3" x1="48" y1="40" x2="120" y2="280" gradientUnits="userSpaceOnUse">
+          <stop stop-color="rgba(255,255,255,0.35)" />
+          <stop offset="0.25" stop-color="rgba(255,255,255,0.10)" />
+          <stop offset="0.7" stop-color="rgba(255,255,255,0.00)" />
+          <stop offset="1" stop-color="rgba(255,255,255,0.14)" />
+        </linearGradient>
+        <linearGradient id="label3" x1="40" y1="0" x2="120" y2="0" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#ffd37a" stop-opacity="0.92" />
+          <stop offset="1" stop-color="#ffb84a" stop-opacity="0.9" />
+        </linearGradient>
+        <linearGradient id="cap3" x1="62" y1="10" x2="98" y2="64" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#aef5ff" stop-opacity="0.95" />
+          <stop offset="1" stop-color="#77cfe0" stop-opacity="0.9" />
+        </linearGradient>
+        <filter id="softGlow3" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="5" result="blur" />
+          <feColorMatrix
+            in="blur"
+            type="matrix"
+            values="
+            1 0 0 0 0
+            0 1 0 0 0
+            0 0 1 0 0
+            0 0 0 0.55 0"
+            result="glow"
+          />
+          <feMerge>
+            <feMergeNode in="glow" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+
+      <g class="foam" filter="url(#softGlow3)">
+        <path
+          d="M64 46c-4-7 2-16 12-16s16 9 12 16c8-2 16 4 16 12 0 11-10 14-24 14H76c-14 0-24-3-24-14 0-8 8-14 16-12Z"
+          fill="rgba(255,255,255,0.9)"
+        />
+        <path
+          d="M61 62c7 6 31 6 38 0"
+          stroke="rgba(170,245,255,0.35)"
+          stroke-width="3"
+          stroke-linecap="round"
+        />
+      </g>
+
+      <path d="M62 62h36v18c0 7-8 12-18 12s-18-5-18-12V62Z" fill="url(#cap3)" opacity="0.95" />
+      <path d="M62 62h36" stroke="rgba(255,255,255,0.6)" stroke-width="3" stroke-linecap="round" />
+
+      <path
+        d="M66 92c0-6 6-12 14-12h0c8 0 14 6 14 12v34c0 8 9 12 9 20v12H57v-12c0-8 9-12 9-20V92Z"
+        fill="url(#glass3)"
+      />
+
+      <path
+        d="M57 158h46c10 0 17 8 17 18v102c0 16-13 30-29 30H69c-16 0-29-14-29-30V176c0-10 7-18 17-18Z"
+        fill="url(#glass3)"
+      />
+
+      <path
+        class="shine"
+        d="M64 110c0-10 8-18 18-18h1c3 0 6 1 8 2-10 6-16 16-16 28v160c0 10 4 18 10 24H70c-4-5-6-11-6-18V110Z"
+        fill="url(#glassEdge3)"
+        opacity="0.75"
+      />
+      <path
+        d="M104 170c8 0 14 7 14 15v90c0 14-11 26-25 26"
+        stroke="rgba(255,255,255,0.14)"
+        stroke-width="3"
+        stroke-linecap="round"
+      />
+
+      <g filter="url(#softGlow3)">
+        <path
+          d="M50 198c0-8 7-15 15-15h30c8 0 15 7 15 15v46c0 8-7 15-15 15H65c-8 0-15-7-15-15v-46Z"
+          fill="rgba(255,255,255,0.10)"
+          stroke="rgba(255,255,255,0.22)"
+        />
+        <path d="M58 192h64v58H58v-58Z" fill="url(#label3)" opacity="0.90" />
+        <path
+          d="M64 214h52"
+          stroke="rgba(10, 42, 85, 0.45)"
+          stroke-width="6"
+          stroke-linecap="round"
+          opacity="0.65"
+        />
+        <path
+          d="M64 232h40"
+          stroke="rgba(10, 42, 85, 0.45)"
+          stroke-width="6"
+          stroke-linecap="round"
+          opacity="0.55"
+        />
+      </g>
+    </svg>
+
+    <div class="sparklers" aria-hidden="true">
+      <div class="sparkler sparkler--left" id="sparklerLeft">
+        <div class="tip"></div>
+        <div class="wire"></div>
+        <div class="stick"></div>
+      </div>
+      <div class="sparkler sparkler--right" id="sparklerRight">
+        <div class="tip"></div>
+        <div class="wire"></div>
+        <div class="stick"></div>
+      </div>
+    </div>
+
+    <div class="poppers" id="poppers" aria-hidden="true"></div>
+
     <main class="wrap">
       <section class="card" role="group" aria-label="Новогодний отсчёт до 30.12.2025">
         <div class="inner">
@@ -540,7 +1081,7 @@
 
         // Snow generator (no external assets)
         const snow = document.getElementById("snow");
-        const flakeCount = Math.min(90, Math.max(48, Math.floor(window.innerWidth / 14)));
+        const flakeCount = Math.min(120, Math.max(64, Math.floor(window.innerWidth / 12)));
         const rand = (a, b) => a + Math.random() * (b - a);
 
         for (let i = 0; i < flakeCount; i++) {
@@ -563,6 +1104,133 @@
 
         tick();
         setInterval(tick, 250);
+
+        // Sparklers (bengal lights)
+        const sparklerLeft = document.getElementById("sparklerLeft");
+        const sparklerRight = document.getElementById("sparklerRight");
+
+        function spawnSpark(sparklerEl) {
+          if (!sparklerEl) return;
+
+          // Origin: roughly the tip center (in sparkler local coords)
+          const originX = 75;
+          const originY = 200;
+
+          const spark = document.createElement("div");
+          spark.className = "spark";
+
+          const size = rand(2, 5).toFixed(2) + "px";
+          const t = rand(450, 980).toFixed(0) + "ms";
+
+          // Angle concentrated upward, with spread
+          const angle = rand(-Math.PI * 0.95, -Math.PI * 0.05);
+          const dist = rand(55, 170);
+          const dx = Math.cos(angle) * dist;
+          const dy = Math.sin(angle) * dist;
+
+          spark.style.setProperty("--sz", size);
+          spark.style.setProperty("--t", t);
+          spark.style.setProperty("--ox", originX + "px");
+          spark.style.setProperty("--oy", originY + "px");
+          spark.style.setProperty("--dx", dx.toFixed(2) + "px");
+          spark.style.setProperty("--dy", dy.toFixed(2) + "px");
+          spark.style.opacity = rand(0.55, 0.98).toFixed(2);
+
+          spark.addEventListener("animationend", () => spark.remove(), { once: true });
+          sparklerEl.appendChild(spark);
+        }
+
+        function runSparklers() {
+          // bursty emission
+          const leftBurst = Math.floor(rand(1, 4));
+          const rightBurst = Math.floor(rand(1, 4));
+
+          for (let i = 0; i < leftBurst; i++) spawnSpark(sparklerLeft);
+          for (let i = 0; i < rightBurst; i++) spawnSpark(sparklerRight);
+        }
+
+        setInterval(runSparklers, 90);
+
+        // Party popper on click/tap
+        const poppers = document.getElementById("poppers");
+        const confettiColors = ["#ffd37a", "#aef5ff", "#ff7aa6", "#77cfe0", "#ffffff"];
+        let lastPopAt = 0;
+
+        function prefersReducedMotion() {
+          return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        }
+
+        function burstAt(clientX, clientY) {
+          if (!poppers || prefersReducedMotion()) return;
+
+          // Simple rate-limit to avoid DOM spam
+          const now = performance.now();
+          if (now - lastPopAt < 120) return;
+          lastPopAt = now;
+
+          const popper = document.createElement("div");
+          popper.className = "popper";
+          popper.style.left = clientX + "px";
+          popper.style.top = clientY + "px";
+          popper.style.setProperty("--rot", (rand(-18, 18).toFixed(2) + "deg"));
+
+          const cone = document.createElement("div");
+          cone.className = "cone";
+          const cap = document.createElement("div");
+          cap.className = "cap";
+          const confetti = document.createElement("div");
+          confetti.className = "confetti";
+
+          // Confetti pieces
+          const count = Math.floor(rand(18, 34));
+          for (let i = 0; i < count; i++) {
+            const piece = document.createElement("div");
+            piece.className = "conf";
+
+            const w = rand(4, 8).toFixed(2) + "px";
+            const h = rand(8, 14).toFixed(2) + "px";
+            const t = rand(780, 1400).toFixed(0) + "ms";
+            const spin = rand(600, 1200).toFixed(0) + "ms";
+
+            const angle = rand(-Math.PI * 0.95, -Math.PI * 0.05);
+            const dist = rand(90, 240);
+            const dx = Math.cos(angle) * dist;
+            const dy = Math.sin(angle) * dist + rand(40, 110); // gravity-ish
+
+            const rz = rand(-540, 540).toFixed(0) + "deg";
+            const color = confettiColors[Math.floor(rand(0, confettiColors.length))];
+
+            piece.style.setProperty("--w", w);
+            piece.style.setProperty("--h", h);
+            piece.style.setProperty("--t", t);
+            piece.style.setProperty("--spin", spin);
+            piece.style.setProperty("--dx", dx.toFixed(2) + "px");
+            piece.style.setProperty("--dy", dy.toFixed(2) + "px");
+            piece.style.setProperty("--rz", rz);
+            piece.style.setProperty("--c", color);
+
+            // Random offset from origin to add spread
+            piece.style.left = rand(-6, 6).toFixed(2) + "px";
+            piece.style.top = rand(-4, 4).toFixed(2) + "px";
+
+            confetti.appendChild(piece);
+          }
+
+          popper.appendChild(cone);
+          popper.appendChild(cap);
+          popper.appendChild(confetti);
+          poppers.appendChild(popper);
+
+          // Cleanup
+          setTimeout(() => popper.remove(), 1400);
+          while (poppers.childElementCount > 16) poppers.firstElementChild?.remove();
+        }
+
+        window.addEventListener("pointerdown", (e) => {
+          // Avoid triggering on right-click
+          if (e.button !== undefined && e.button !== 0) return;
+          burstAt(e.clientX, e.clientY);
+        });
 
         // Show target in local format
         const dd = String(target.getDate()).padStart(2, "0");
